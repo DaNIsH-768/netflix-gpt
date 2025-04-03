@@ -3,6 +3,7 @@ import {useRef, useState} from "react";
 import {validateUser} from "../utils/validate";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import {auth} from "../utils/firebase";
+import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 
 const Login = () => {
     const [signup, setSignUp] = useState(false);
@@ -17,12 +18,15 @@ const Login = () => {
 
     const handleButtonClick = (e) => {
         const msg = validateUser(email.current.value, password.current.value);
-        if (msg) { setErrMsg(msg); return;}
+        if (msg) { enqueueSnackbar(msg); return;}
 
         if (signup) {
             createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
                 .then((userCredential) => {
                     const user = userCredential.user;
+                    enqueueSnackbar("Sign Up successfull!", {
+                        variant: "success"
+                    });
                     console.log(user);
                 })
                 .catch((error) => {
@@ -36,6 +40,9 @@ const Login = () => {
                     // Signed in
                     const user = userCredential.user;
                     console.log(user);
+                    enqueueSnackbar("Sign In successfull!", {
+                        variant: "success"
+                    })
                     // ...
                 })
                 .catch((error) => {
@@ -76,7 +83,6 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                     />
-                    <p className={"italic font-bold text-lg px-3 text-red-500"}>{errMsg}</p>
                     <button
                         onClick={handleButtonClick}
                         className="bg-red-600 text-white rounded-md p-3 hover:bg-red-700 transition-colors duration-200 focus:outline-none"
@@ -90,7 +96,7 @@ const Login = () => {
                     <span onClick={toggleSignUp} className="text-red-600 hover:underline cursor-pointer">{signup ? "Log in now" : "Sign up now"}</span>
                 </p>
             </div>
-
+            <SnackbarProvider anchorOrigin={{ vertical: "bottom", horizontal: "center" }} variant={"error"} preventDuplicate={true}/>
         </div>
     )
 }
