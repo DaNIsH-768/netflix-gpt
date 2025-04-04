@@ -7,7 +7,6 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 
 const Login = () => {
     const [signup, setSignUp] = useState(false);
-    const [errMsg, setErrMsg] = useState(null);
 
     const toggleSignUp = () => {
         setSignUp(!signup);
@@ -27,12 +26,11 @@ const Login = () => {
                     enqueueSnackbar("Sign Up successfull!", {
                         variant: "success"
                     });
-                    console.log(user);
+                    setSignUp(false);
                 })
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
-                    setErrMsg(errorMessage);
                 });
         } else {
             signInWithEmailAndPassword(auth, email.current.value, password.current.value)
@@ -57,8 +55,9 @@ const Login = () => {
     return (
         <div>
         <Header/>
-            <div className={"absolute"}>
+            <div className={"absolute h-full w-full"}>
                 <img
+                    className={"h-full w-full"}
                     alt={"background"}
                     src={"https://assets.nflxext.com/ffe/siteui/vlv3/50fcc930-ba3f-4cae-9257-9f920e30a998/web/GB-en-20250310-TRIFECTA-perspective_00a38f92-f3f2-4466-a761-2b221cc94749_small.jpg"}/>
             </div>

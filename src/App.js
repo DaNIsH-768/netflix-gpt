@@ -10,6 +10,7 @@ function App() {
           <Header/>
           <Routes>
               <Route path={"/"} element={<Login/>}/>
+              <Route path={"/header"} element={<Header/>}/>
           </Routes>
       </div>
   );
