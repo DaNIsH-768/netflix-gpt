@@ -1,12 +1,15 @@
 import Header from "./Header";
 import {useRef, useState} from "react";
 import {validateUser} from "../utils/validate";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import {auth} from "../utils/firebase";
 import { SnackbarProvider, enqueueSnackbar } from 'notistack'
+import {useDispatch} from "react-redux";
+import {setUser} from "../utils/userSlice";
 
 const Login = () => {
     const [signup, setSignUp] = useState(false);
+    const dispatch = useDispatch();
 
     const toggleSignUp = () => {
         setSignUp(!signup);
@@ -14,6 +17,7 @@ const Login = () => {
 
     const email = useRef(null);
     const password = useRef(null);
+    const fullName = useRef(null);
 
     const handleButtonClick = (e) => {
         const msg = validateUser(email.current.value, password.current.value);
@@ -26,11 +30,22 @@ const Login = () => {
                     enqueueSnackbar("Sign Up successfull!", {
                         variant: "success"
                     });
-                    setSignUp(false);
+                    updateProfile(user, {
+                        displayName: fullName.current.value,
+                    }).then(() => {
+                        const {uid, email, displayName} = auth.currentUser;
+                        dispatch(setUser({uid, email, displayName}));
+                    }
+                    ).catch((err) => {
+                        console.log(err.message);
+                    })
                 })
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
+                    enqueueSnackbar(errorMessage, {
+                        variant: "error",
+                    })
                 });
         } else {
             signInWithEmailAndPassword(auth, email.current.value, password.current.value)
@@ -46,7 +61,9 @@ const Login = () => {
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
-                    console.log(errorMessage);
+                    enqueueSnackbar(errorMessage, {
+                        variant: "error",
+                    })
                 });
         }
 
@@ -55,9 +72,9 @@ const Login = () => {
     return (
         <div>
         <Header/>
-            <div className={"absolute h-full w-full"}>
+            <div className={"absolute h-screen w-screen"}>
                 <img
-                    className={"h-full w-full"}
+                    className={"h-screen w-screen"}
                     alt={"background"}
                     src={"https://assets.nflxext.com/ffe/siteui/vlv3/50fcc930-ba3f-4cae-9257-9f920e30a998/web/GB-en-20250310-TRIFECTA-perspective_00a38f92-f3f2-4466-a761-2b221cc94749_small.jpg"}/>
             </div>
@@ -66,6 +83,7 @@ const Login = () => {
                 <h1 className="text-white text-4xl font-bold mb-6 text-center">{signup? "Sign Up" : "Sign In"}</h1>
                 <form onSubmit={(e) => e.preventDefault()} className="flex flex-col space-y-4">
                     {signup && <input
+                        ref={fullName}
                         className="bg-gray-800 text-white placeholder-gray-400 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-red-600"
                         type="text"
                         placeholder="Full Name"
