@@ -1,17 +1,9 @@
-import useNowPlayingMovies from "../hooks/useNowPlayingMovies";
-import {useSelector} from "react-redux";
+import MainContainer from "./MainContainer";
 
 const Browse = () => {
-    useNowPlayingMovies();
-    const {nowPlayingMovies} = useSelector(store => store.movies);
-    if (nowPlayingMovies) {
-        const mainMovie = nowPlayingMovies[0];
-        console.log(mainMovie);
-    }
-
     return (
         <div>
-            <h1>Browse Page</h1>
+            <MainContainer/>
         </div>
     )
 }
