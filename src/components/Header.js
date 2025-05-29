@@ -17,7 +17,7 @@ const Header = () => {
 
     return (
         <div
-            className="flex absolute justify-between items-center w-full px-8 py-4 bg-gradient-to-t from-black to-transparent z-10">
+            className="flex absolute justify-between items-center w-full px-8 py-4 bg-black z-10">
             {/* Logo */}
             <div>
                 <img

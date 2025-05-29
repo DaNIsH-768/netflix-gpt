@@ -1,4 +1,7 @@
+import {useSelector} from "react-redux";
+
 const VideoTitle = ({title, overview}) => {
+
     return (
         <div className="h-screen w-1/2 absolute text-white bg-gradient-to-r from-black flex items-center">
             <div className={"mx-24 my-auto"}>

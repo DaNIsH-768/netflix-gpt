@@ -1,24 +1,19 @@
-import {options} from "../utils/API_KEY";
-import {useEffect} from "react";
+import useMainMovieTrailer from "../hooks/useMainMovieTrailer";
+import {useSelector} from "react-redux";
 
 const VideoBackground = ({movieId}) => {
-    const fetchMovieTrailer = async () => {
-        const videosData = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`, options);
-        const videos = (await videosData.json()).results;
-        const trailer = videos.find(video => video.type === "Trailer");
+    useMainMovieTrailer(movieId);
+    console.log(movieId);
+    const trailer = useSelector(store => store.movies.featuredMovieTrailer);
+    const key = trailer?.key;
 
-        console.log(trailer);
-    }
-
-    useEffect(() => {
-        fetchMovieTrailer();
-    })
+    if (!trailer) return null;
 
     return (
-        <div>
+        <div className={"w-screen aspect-video pointer-events-none"}>
             <iframe
-                className={"w-screen aspect-video pointer-events-none"}
-                src="https://www.youtube.com/embed/VWqJifMMgZE?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&mute=1&loop=1&playlist=VWqJifMMgZE"
+                className={"w-[300%] h-[100%] ml-[-100%]"}
+                src={`https://www.youtube.com/embed/${key}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&mute=1&loop=1&playlist=${key}`}
                 title={""}
                     allow="autoplay"
                 allowFullScreen
