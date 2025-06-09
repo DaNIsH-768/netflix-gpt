@@ -2,9 +2,9 @@ import MovieItem from "./MovieItem";
 
 const MovieList = ({movies, title}) => {
     return (movies &&
-        (<div className={"-mt-64 relative z-20 m-2"}>
-            <h3 className={"py-4 font-semibold text-white text-xl"}>{title}</h3>
-            <div className={"flex overflow-x-scroll"}>
+        (<div>
+            <h2 className={"py-4 font-bold text-white text-xl tracking-wide"}>{title}</h2>
+            <div className={"flex overflow-x-scroll scrollbar-hide"}>
                 {movies.map((movie, index) => (
                     <MovieItem key={index} image={movie?.poster_path}/>
                 ))}
